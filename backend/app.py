@@ -7,28 +7,30 @@ import json
 
 app = Flask(__name__)
 CORS(
-    app,
-    resources={r"/*": {"origins": "*"}},
-    supports_credentials=True,
-    allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
-    methods=["GET", "POST", "OPTIONS"]
+	app,
+	resources={r"/*": {"origins": "*"}},
+	supports_credentials=True,
+	allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+	methods=["GET", "POST", "OPTIONS"]
 )
 
 @app.before_request
 def log_request():
-    print(f"\n--- Incoming Request: {request.method} {request.path}")
-    for h, v in request.headers:
-        print(f"{h}: {v}")
+	print(f"\n--- Incoming Request: {request.method} {request.path}")
+	for h, v in request.headers:
+		print(f"{h}: {v}")
 
 @app.after_request
 def log_response(response):
-    print(f"--- Response Headers:")
-    for h, v in response.headers:
-        print(f"{h}: {v}")
-    return response
+	print(f"--- Response Headers:")
+	for h, v in response.headers:
+		print(f"{h}: {v}")
+	return response
 
 @app.route('/getbb', methods=['POST', 'OPTIONS'])
 def getbb():
+	if request.method == 'OPTIONS':
+		return '', 200
 	data = request.get_json()
 	b64image = data["image"]
 	header, b64_data = b64image.split(",", 1)
@@ -72,7 +74,6 @@ def detectItem(image_bytes):
 			'What food or ingredient is in the image? Please provide a concise and short answer, preferable just the food/ingredient\'s name'
 		]
 	)
-	print(response.text)
 	return jsonify(response.text)
 
 
@@ -115,7 +116,6 @@ def detectBB(image_bytes):
 
 		]
 	)
-	return response.text
+	return jsonify({"result": response.text})
 if __name__ == '__main__':
-	print("HI")
 	app.run(host='0.0.0.0', port=5050, debug=True)
