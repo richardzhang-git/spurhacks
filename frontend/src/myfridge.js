@@ -33,7 +33,7 @@ const MyFridgeApp = () => {
       React.createElement(
         'img',
         {
-          src: 'public/home.png',
+          src: '/Home.png',
           alt: 'Home',
           className: 'w-8 h-8 mr-2 cursor-pointer',
           onClick: () => window.location.href = './index.html'
