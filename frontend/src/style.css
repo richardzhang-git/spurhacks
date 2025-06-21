@@ -115,7 +115,7 @@ main {
 /* For example: */
 body {
     margin: 0;
-    font-family: 'Pixelify Sans', cursive; /* Example font from your header */
+    font-family: 'Pixelify Sans', monospace; /* Example font from your header */
 }
 
 /* You might want to define custom classes here if Tailwind isn't enough */
