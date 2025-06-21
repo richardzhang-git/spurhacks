@@ -18,6 +18,6 @@ document.querySelector('#app').innerHTML = /*html*/ `
   <form id="login">
     <input type="text" placeholder="Username" class="input input-xl" id="username" />
     <input type="password" placeholder="Password" class="input input-xl" id="password" />
-    <button class="btn btn-primary btn-xl" id="submit">Enter</button>
+    <button class="btn btn-primary btn-xl" id="submit" type="button" onclick="window.location.href='/home/';">Enter</button>
 <form>
 `
