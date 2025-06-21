@@ -1,7 +1,5 @@
 import './style.css'
-import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
 
 document.querySelector('#app').innerHTML = /*html*/ `
 <div id="logo"></div>
@@ -11,5 +9,3 @@ document.querySelector('#app').innerHTML = /*html*/ `
     <button class="btn btn-primary btn-xl" id="submit">Enter</button>
 <form>
 `
-
-setupCounter(document.querySelector('#counter'))
