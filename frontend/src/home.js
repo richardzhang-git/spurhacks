@@ -1,4 +1,4 @@
-import './style.css'; // Keep this line if using a build tool that handles CSS imports
+import './style.css';
 
 import React from 'https://esm.sh/react@18.2.0';
 import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
@@ -90,12 +90,10 @@ const App = () => {
             src: '/RecipeBook.png', // Assuming /RecipeBook.png is the correct path
             alt: 'Recipe Book',
             className: 'absolute inset-0 w-full h-full object-cover z-0',
-          }),
-          // Recipes Text - overlaid on top of the image
+          })
           React.createElement(
             'p',
             {
-              // Removed p-2 bg-black bg-opacity-50 rounded-lg from here
               className: 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white text-3xl font-extrabold z-10', // Removed background classes
               style: { textShadow: '2px 2px 4px rgba(0,0,0,0.7)' } // Optional: kept text shadow for readability
             },
@@ -107,7 +105,6 @@ const App = () => {
   );
 };
 
-// Render
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {

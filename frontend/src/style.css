@@ -107,3 +107,24 @@ main {
   background-color: #4a90e2;
   border-radius: 4px;
 }
+#background-wrapper {
+  position: relative;
+  width: 360px;
+  height: 780px;
+  overflow: hidden;
+  border-radius: 12px;
+  background-image: url('public/myfridge.png'); /* ✅ Remove /public prefix */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #eee;
+  padding: 20px;
+}
+/* Add any specific styles for your My Fridge page here */
+/* For example: */
+body {
+    margin: 0;
+    font-family: 'Pixelify Sans', cursive; /* Example font from your header */
+}
+
+/* You might want to define custom classes here if Tailwind isn't enough */
