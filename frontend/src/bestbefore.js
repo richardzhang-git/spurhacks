@@ -65,7 +65,7 @@ controls.addEventListener('click', async (event) => {
         const imageData = canvas.toDataURL(); // Default is image/png
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/getbb', {
+            const response = await fetch('http://127.0.0.1:5050/getbb', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,20 +73,20 @@ controls.addEventListener('click', async (event) => {
                 body: JSON.stringify({ image: imageData })
             });
 
-            const text = await response.text();  // Log the raw response
+            const text = JSON.parse(await response.text());  // Log the raw response
             console.log("Raw response:", text);
             var temp_arr = '[' + localStorage.getItem("key") + ']';
             console.log(temp_arr);
             temp_arr = JSON.parse(temp_arr);
             console.log(temp_arr[temp_arr.length - 1]);
-            temp_arr[temp_arr.length - 1].push(text);
+            temp_arr[temp_arr.length - 1].push(text.result);
             console.log(temp_arr[temp_arr.length - 1]);
             for (let i = 0; i < temp_arr.length; i++) {
                 temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
             }
             console.log(temp_arr);
             localStorage.setItem("key", temp_arr);
-            changeText("Date detected: " + text);
+            changeText("Date detected: ");
 
         } catch (err) {
             console.error('Error:', err);
@@ -103,7 +103,7 @@ controls.addEventListener('click', async (event) => {
     }
     if (event.target.id === 'guess-bb') {
         try {
-            const response = await fetch('http://127.0.0.1:5000/guessTime', {
+            const response = await fetch('http://127.0.0.1:5050/guessTime', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({"item":"cheese"})
@@ -152,6 +152,6 @@ controls.addEventListener('click', async (event) => {
     // Handle "Confirm"
     if (event.target.id === 'confirm') {
         controls.innerHTML = `<span>Processing...</span>`;
-        // You can add more functionality here
+        window.location.href = '/home/';
     }
 });

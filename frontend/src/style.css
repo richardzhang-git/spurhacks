@@ -84,6 +84,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  overflow: visible;
 }
 
 .card {

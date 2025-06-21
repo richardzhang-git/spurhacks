@@ -12,7 +12,7 @@ export default defineConfig({
 				bestbefore: 'bestbefore/index.html',
 				getitem: 'getitem/index.html',
 				home: 'home/index.html',
-				ingredients: 'myfridge/index.html'
+				myfridge: 'myfridge/index.html',
 			},
 		},
 	},
