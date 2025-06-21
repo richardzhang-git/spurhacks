@@ -4,17 +4,39 @@ import viteLogo from '/vite.svg'
 document.querySelector('#app').innerHTML = /*html*/ `
 <video id="video" autoplay playsinline style="display: none;"></video>
 <canvas id="canvas" width="384" height="384"></canvas>
-<button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+<div id="controls">
+    <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+</div>
 `
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const captureBtn = document.getElementById('take-bb');
+const controls = document.getElementById('controls');
+
+let animationId = null;
+let isFrozen = false;
+
+function drawFrame() {
+    if (isFrozen) return;
+
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+
+    if (vw && vh) {
+        const side = Math.min(vw, vh);
+        const sx = (vw - side) / 2;
+        const sy = (vh - side) / 2;
+
+        ctx.drawImage(video, sx, sy, side, side, 0, 0, 384, 384);
+    }
+
+    animationId = requestAnimationFrame(drawFrame);
+}
 
 navigator.mediaDevices.getUserMedia({
     video: {
-        width: { ideal: 1280 }, // Request a reasonably high resolution
+        width: { ideal: 1280 },
         height: { ideal: 720 },
     }
 })
@@ -22,19 +44,53 @@ navigator.mediaDevices.getUserMedia({
     video.srcObject = stream;
 
     video.addEventListener('loadedmetadata', () => {
-        // Wait until the video dimensions are available
-        captureBtn.addEventListener('click', () => {
-            const vw = video.videoWidth;
-            const vh = video.videoHeight;
-            const side = Math.min(vw, vh);
-
-            const sx = (vw - side) / 2;
-            const sy = (vh - side) / 2;
-
-            // Draw the centered square portion of the video onto the 384x384 canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(video, sx, sy, side, side, 0, 0, 384, 384);
-        });
+        drawFrame();
     });
 })
 .catch(err => console.error("Camera access denied:", err));
+
+// Handle initial "Find Best Before Date" button
+controls.addEventListener('click', event => {
+    if (event.target.id === 'take-bb') {
+        isFrozen = true;
+        cancelAnimationFrame(animationId);
+
+        // Replace button with Confirm/Cancel
+        controls.innerHTML = `
+            <button id="confirm" class="btn btn-success">Confirm</button>
+            <button id="cancel" class="btn btn-secondary">Cancel</button>
+        `;
+    }
+
+    // Handle "Cancel"
+    if (event.target.id === 'cancel') {
+        isFrozen = false;
+        drawFrame();
+
+        // Restore original button
+        controls.innerHTML = `
+            <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+        `;
+    }
+
+    // Handle "Confirm"
+    if (event.target.id === 'confirm') {
+        // Stub fetch call
+        const imageData = canvas.toDataURL(); // Default is image/png
+        fetch('/process-image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: imageData })
+        })
+        .then(() => {
+            console.log('Image submitted successfully.');
+        })
+        .catch(console.error);
+
+
+        // Keep frozen, maybe disable buttons if needed
+        controls.innerHTML = `<span>Processing...</span>`;
+    }
+});
