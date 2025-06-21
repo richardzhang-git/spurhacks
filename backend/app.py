@@ -59,6 +59,6 @@ def getRecipes():
 		model="gemini-2.5-flash", contents=prompt
 	)
 	# print(response.text[7:-3].strip())
-	return json.loads(response.text[7:-3].strip())
+	return {"responses": json.loads(response.text[7:-3].strip())}
 
 print(getRecipes()[0])
