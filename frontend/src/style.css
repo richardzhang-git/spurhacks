@@ -97,16 +97,6 @@ main {
   position: relative;
 }
 
-#recipes::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  background-color: #4a90e2;
-  border-radius: 4px;
-}
 #background-wrapper {
   position: relative;
   width: 360px;
