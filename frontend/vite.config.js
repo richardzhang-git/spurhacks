@@ -11,7 +11,8 @@ export default defineConfig({
 				main: 'index.html',
 				bestbefore: 'bestbefore/index.html',
 				getitem: 'getitem/index.html',
-				home: 'home/index.html'
+				home: 'home/index.html',
+				ingredients: 'myfridge/index.html'
 			},
 		},
 	},
