@@ -31,17 +31,13 @@ const MyFridgeApp = () => {
       'header',
       { className: 'flex items-center p-4 border-b-2 border-black bg-white' },
       React.createElement(
-        'svg',
+        'img',
         {
+          src: 'public/home.png',
+          alt: 'Home',
           className: 'w-8 h-8 mr-2 cursor-pointer',
-          fill: 'currentColor',
-          viewBox: '0 0 24 24',
-          xmlns: 'http://www.w3.org/2000/svg',
           onClick: () => window.location.href = './index.html'
-        },
-        React.createElement('path', {
-          d: 'M12 0L0 12h3v10h6v-6h6v6h6V12h3L12 0z'
-        })
+        }
       ),
       React.createElement(
         'h1',
@@ -58,7 +54,7 @@ const MyFridgeApp = () => {
           'div',
           {
             key: index,
-            className: `bg-gray-200 border border-black p-4 rounded-lg flex items-center ${item.name ? '' : 'min-h-[60px]'}`
+            className: `bg-gray-200 border border-black p-4 rounded-lg flex items-center ${item.name ? '' : 'min-h-[80px]'}`
           },
           item.name && React.createElement('div', {
             className: 'w-8 h-8 rounded mr-4',
@@ -80,11 +76,16 @@ const MyFridgeApp = () => {
           )
         )
       ),
+      // Pink button positioned within the main container
       React.createElement(
         'button',
         {
-          className: 'absolute bottom-8 right-8 w-14 h-14 bg-pink-300 border-2 border-black rounded-full flex items-center justify-center text-black font-bold text-3xl',
+          className: 'absolute w-14 h-14 bg-pink-300 border-2 border-black rounded-full flex items-center justify-center text-black font-bold text-3xl',
           'aria-label': 'Add Item',
+          style: {
+            bottom: '-70px',
+            right: '20px'
+          }
         },
         '+'
       )
