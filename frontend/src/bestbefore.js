@@ -7,6 +7,7 @@ document.querySelector('#app').innerHTML = /*html*/ `
 <div id="message" style="margin: 10px 0; color: green;">Take a photo to begin</div>
 <div id="controls">
     <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+    <button id="guess-bb" class="btn btn-primary">No Exact Date</button>
 </div>
 `
 
@@ -74,7 +75,17 @@ controls.addEventListener('click', async (event) => {
 
             const text = await response.text();  // Log the raw response
             console.log("Raw response:", text);
-
+            var temp_arr = '[' + localStorage.getItem("key") + ']';
+            console.log(temp_arr);
+            temp_arr = JSON.parse(temp_arr);
+            console.log(temp_arr[temp_arr.length - 1]);
+            temp_arr[temp_arr.length - 1].push(text);
+            console.log(temp_arr[temp_arr.length - 1]);
+            for (let i = 0; i < temp_arr.length; i++) {
+                temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
+            }
+            console.log(temp_arr);
+            localStorage.setItem("key", temp_arr);
             changeText("Date detected: " + text);
 
         } catch (err) {
@@ -87,13 +98,49 @@ controls.addEventListener('click', async (event) => {
         // Replace button with Confirm/Cancel
         controls.innerHTML = `
             <button id="confirm" class="btn btn-success">Confirm</button>
+            <button id="retry" class="btn btn-secondary">Retry</button>
+        `;
+    }
+    if (event.target.id === 'guess-bb') {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/guessTime', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({"item":"cheese"})
+            });
+
+            const json = await response.json();  // backend returns JSON here
+            console.log("Response JSON:", json);
+            changeText("Estimated expiry date: " + json.date);
+
+        } catch (err) {
+            console.error('Error:', err);
+            changeText("Error processing image.");
+        }
+
+        cancelAnimationFrame(animationId);
+
+        // Replace buttons
+        controls.innerHTML = `
+            <button id="confirm" class="btn btn-success">Confirm</button>
             <button id="cancel" class="btn btn-secondary">Cancel</button>
         `;
     }
 
     // Handle "Cancel"
-    if (event.target.id === 'cancel') {
+    if (event.target.id === 'retry') {
         isFrozen = false;
+        var temp_arr = '[' + localStorage.getItem("key") + ']';
+            console.log(temp_arr);
+            temp_arr = JSON.parse(temp_arr);
+            console.log(temp_arr[temp_arr.length - 1]);
+            temp_arr[temp_arr.length - 1].pop();
+            console.log(temp_arr[temp_arr.length - 1]);
+            for (let i = 0; i < temp_arr.length; i++) {
+                temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
+            }
+            console.log(temp_arr);
+            localStorage.setItem("key", temp_arr);
         changeText("Take a photo to begin");
         drawFrame();
         // Restore original button

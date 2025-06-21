@@ -78,6 +78,17 @@ controls.addEventListener('click', async (event) => {
 
             const data = await response.json(); // Parse JSON response
             console.log('Response from Flask:', data);
+            var temp_arr = '[' + localStorage.getItem("key") + ']';
+            console.log(temp_arr);
+            temp_arr = JSON.parse(temp_arr);
+            console.log(temp_arr);
+            temp_arr.push([data]);
+            console.log(temp_arr);
+            for (let i = 0; i < temp_arr.length; i++) {
+                temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
+            }
+            console.log(temp_arr);
+            localStorage.setItem("key", temp_arr);
             changeText('Food detected: ' + data);  // Show result
         } catch (err) {
             console.error('Error:', err);
@@ -89,12 +100,24 @@ controls.addEventListener('click', async (event) => {
         // Replace button with Confirm/Cancel
         controls.innerHTML = `
             <button id="confirm" class="btn btn-success">Confirm</button>
-            <button id="cancel" class="btn btn-secondary">Cancel</button>
+            <button id="retry" class="btn btn-secondary">Retry</button>
         `;
     }
 
     // Handle "Cancel"
-    if (event.target.id === 'cancel') {
+    if (event.target.id === 'retry') {
+        var temp_arr = '[' + localStorage.getItem("key") + ']';
+        console.log(temp_arr);
+        temp_arr = JSON.parse(temp_arr);
+        console.log(temp_arr);
+        temp_arr.pop();
+        console.log(temp_arr);
+        for (let i = 0; i < temp_arr.length; i++) {
+            temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]';
+            console.log(temp_arr[i]);
+        }
+        console.log(temp_arr);
+        localStorage.setItem("key", temp_arr);
         isFrozen = false;
         changeText("Take a photo to begin");
         drawFrame();
@@ -108,5 +131,6 @@ controls.addEventListener('click', async (event) => {
     if (event.target.id === 'confirm') {
         controls.innerHTML = `<span>Processing...</span>`;
         // You can add more functionality here
+        window.location.href = '/bestbefore/';
     }
 });

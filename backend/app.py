@@ -1,9 +1,12 @@
+import random
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from google import genai
 from google.genai import types
 import base64
 import json
+from datetime import date, timedelta
 
 app = Flask(__name__)
 CORS(
@@ -74,8 +77,18 @@ def detectItem(image_bytes):
 			'What food or ingredient is in the image? Please provide a concise and short answer, preferable just the food/ingredient\'s name'
 		]
 	)
+
 	return jsonify(response.text)
 
+
+@app.route('/guessTime', methods=['POST', 'OPTIONS'])
+def guessTime():
+	if request.method == 'OPTIONS':
+		return '', 200
+	data = request.get_json(silent=True)
+	shelf_life_days = random.randint(9, 10)
+	expiry_date = date.today() + timedelta(days=shelf_life_days)
+	return jsonify({"date": expiry_date.isoformat()})
 
 def recipePrompt(ingredients:list[str], expiry_dates:list[str], num:int):
 	prompt = f'''List {num} popular recipes, and include the amounts of ingredients and the steps to make the recipe.
