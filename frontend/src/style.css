@@ -16,6 +16,13 @@
     border-radius: 50%;
 }
 
+#message {
+    margin: 10px 0;
+    color: red;
+    font-size: 20px;    /* Make it larger */
+    visibility: visible; /* Ensure it's visible */
+}
+
 #login {
     margin-top: 0;
 }

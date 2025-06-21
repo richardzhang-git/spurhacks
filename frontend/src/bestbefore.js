@@ -3,7 +3,8 @@ import viteLogo from '/vite.svg'
 
 document.querySelector('#app').innerHTML = /*html*/ `
 <video id="video" autoplay playsinline style="display: none;"></video>
-<canvas id="canvas" width="384" height="384"></canvas>
+<canvas id="canvas" width="360" height="360"></canvas>
+<div id="message" style="margin: 10px 0; color: green;">Take a photo to begin</div>
 <div id="controls">
     <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
 </div>
@@ -17,6 +18,13 @@ const controls = document.getElementById('controls');
 let animationId = null;
 let isFrozen = false;
 
+function changeText(message) {
+    const messageDiv = document.getElementById("message");
+    if (messageDiv) {
+        messageDiv.textContent = message;
+    }
+}
+
 function drawFrame() {
     if (isFrozen) return;
 
@@ -28,7 +36,7 @@ function drawFrame() {
         const sx = (vw - side) / 2;
         const sy = (vh - side) / 2;
 
-        ctx.drawImage(video, sx, sy, side, side, 0, 0, 384, 384);
+        ctx.drawImage(video, sx, sy, side, side, 0, 0, 360, 360);
     }
 
     animationId = requestAnimationFrame(drawFrame);
@@ -50,9 +58,30 @@ navigator.mediaDevices.getUserMedia({
 .catch(err => console.error("Camera access denied:", err));
 
 // Handle initial "Find Best Before Date" button
-controls.addEventListener('click', event => {
+controls.addEventListener('click', async (event) => {
     if (event.target.id === 'take-bb') {
         isFrozen = true;
+        const imageData = canvas.toDataURL(); // Default is image/png
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/getbb', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image: imageData })
+            });
+
+            const text = await response.text();  // Log the raw response
+            console.log("Raw response:", text);
+
+            changeText("Date detected: " + text);
+
+        } catch (err) {
+            console.error('Error:', err);
+            changeText("Error processing image.");
+        }
+
         cancelAnimationFrame(animationId);
 
         // Replace button with Confirm/Cancel
@@ -65,32 +94,17 @@ controls.addEventListener('click', event => {
     // Handle "Cancel"
     if (event.target.id === 'cancel') {
         isFrozen = false;
+        changeText("Take a photo to begin");
         drawFrame();
-
         // Restore original button
         controls.innerHTML = `
-            <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+            <button id="take-bb" class="btn btn-primary">Find Item</button>
         `;
     }
 
     // Handle "Confirm"
     if (event.target.id === 'confirm') {
-        // Stub fetch call
-        const imageData = canvas.toDataURL(); // Default is image/png
-        fetch('http://127.0.0.1:5000/getbb', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ image: imageData })
-        })
-        .then(() => {
-            console.log('Image submitted successfully.');
-        })
-        .catch(console.error);
-
-
-        // Keep frozen, maybe disable buttons if needed
         controls.innerHTML = `<span>Processing...</span>`;
+        // You can add more functionality here
     }
 });
