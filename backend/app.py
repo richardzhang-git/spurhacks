@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request
 from google import genai
 from google.genai import types
 import base64
@@ -77,3 +77,22 @@ def getRecipes():
 	)
 	# print(response.text[7:-3].strip())
 	return {"responses": json.loads(response.text[7:-3].strip())}
+
+def detectBB(image_bytes):
+	key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
+	client = genai.Client(api_key=key)
+	response = client.models.generate_content(
+		model='gemini-2.5-flash',
+		contents=[
+			types.Part.from_bytes(
+				data=image_bytes,
+				mime_type='image/png',
+			),
+			'''There is text in the image that represent the best before/expiry rate of an item. Please represent the date in the following format:
+			YYYY-MM-DD
+			as a string.
+			'''
+
+		]
+	)
+	return response.text
