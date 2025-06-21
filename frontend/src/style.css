@@ -42,3 +42,68 @@
     margin-top: 5vh;
     width: 300px;
 }
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 2.5em;
+  font-family: 'Courier New', monospace; /* mimics that blocky header */
+  margin: 0;
+}
+
+.profile-btn {
+  width: 48px;
+  height: 48px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background-color: #d3d3d3;
+  padding: 40px 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1.1em;
+  position: relative;
+}
+
+#recipes::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-color: #4a90e2;
+  border-radius: 4px;
+}
