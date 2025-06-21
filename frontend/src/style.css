@@ -107,3 +107,12 @@ main {
   background-color: #4a90e2;
   border-radius: 4px;
 }
+
+.independent-text {
+        position: absolute;
+        top: 340px;
+        left: 50px;
+        background-color: black;
+        color: white;
+        padding: 5px;
+      }

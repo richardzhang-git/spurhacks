@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from google import genai
 from google.genai import types
@@ -6,22 +6,46 @@ import base64
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+    methods=["GET", "POST", "OPTIONS"]
+)
 
-@app.route('/getbb', methods=["POST"])
+@app.before_request
+def log_request():
+    print(f"\n--- Incoming Request: {request.method} {request.path}")
+    for h, v in request.headers:
+        print(f"{h}: {v}")
+
+@app.after_request
+def log_response(response):
+    print(f"--- Response Headers:")
+    for h, v in response.headers:
+        print(f"{h}: {v}")
+    return response
+
+@app.route('/getbb', methods=['POST', 'OPTIONS'])
 def getbb():
-	b64image = request.get_json("image")["image"]
+	data = request.get_json()
+	b64image = data["image"]
 	header, b64_data = b64image.split(",", 1)
-	file_format = header.split("/")[1].split(";")[0]
-	filename = f"output.{file_format}"
-
 	image_data = base64.b64decode(b64_data)
-	# print(b64image)
-	with open(filename, "wb") as f:
-		f.write(image_data)
-	return image_data
+	return detectBB(image_data)
 
-@app.route('/getbarcode')
+@app.route('/getitem', methods=['POST', 'OPTIONS'])
+def getitem():
+	if request.method == 'OPTIONS':
+		return '', 200
+	data = request.get_json()
+	b64image = data["image"]
+	header, b64_data = b64image.split(",", 1)
+	image_data = base64.b64decode(b64_data)
+	return detectItem(image_data)
+
+@app.route('/getbarcode', methods=['POST', 'OPTIONS'])
 def getbarcode():
 	b64image = request.args.get("image")
 	if b64image.startswith("data:image"):
@@ -48,7 +72,8 @@ def detectItem(image_bytes):
 			'What food or ingredient is in the image? Please provide a concise and short answer, preferable just the food/ingredient\'s name'
 		]
 	)
-	return response.text
+	print(response.text)
+	return jsonify(response.text)
 
 
 def recipePrompt(ingredients:list[str], expiry_dates:list[str], num:int):
@@ -91,3 +116,6 @@ def detectBB(image_bytes):
 		]
 	)
 	return response.text
+if __name__ == '__main__':
+	print("HI")
+	app.run(host='0.0.0.0', port=5050, debug=True)
