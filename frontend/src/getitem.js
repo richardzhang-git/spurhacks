@@ -6,7 +6,7 @@ document.querySelector('#app').innerHTML = /*html*/ `
 <canvas id="canvas" width="360" height="360"></canvas>
 <div id="message" style="margin: 10px 0; color: green;">Take a photo to begin</div>
 <div id="controls">
-    <button id="take-bb" class="btn btn-primary">Find Best Before Date</button>
+    <button id="take-bb" class="btn btn-primary">Find Item</button>
 </div>
 `
 
@@ -64,19 +64,21 @@ controls.addEventListener('click', async (event) => {
         const imageData = canvas.toDataURL(); // Default is image/png
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/getbb', {
+            const response = await fetch('http://127.0.0.1:5000/getitem', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ image: imageData })
             });
 
-            const text = await response.text();  // Log the raw response
-            console.log("Raw response:", text);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-            changeText("Date detected: " + text);
-
+            const data = await response.json(); // Parse JSON response
+            console.log('Response from Flask:', data);
+            changeText('Food detected: ' + data);  // Show result
         } catch (err) {
             console.error('Error:', err);
             changeText("Error processing image.");

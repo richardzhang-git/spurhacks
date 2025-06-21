@@ -10,6 +10,7 @@ export default defineConfig({
 			input: {
 				main: 'index.html',
 				bestbefore: 'bestbefore/index.html',
+				getitem: 'getitem/index.html',
 				home: 'home/index.html'
 			},
 		},
