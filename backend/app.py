@@ -1,28 +1,23 @@
 from flask import Flask, request
+from flask_cors import CORS
 from google import genai
 from google.genai import types
 import base64
 import json
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/getbb')
+@app.route('/getbb', methods=["POST"])
 def getbb():
-	b64image = request.args.get("image")
-	if b64image.startswith("data:image"):
-		header, b64_data = b64image.split(",", 1)
-		file_format = header.split("/")[1].split(";")[0]
-		filename = f"output.{file_format}"
-	else:
-		b64_data = b64image
-		filename = "output.png"
-	print(filename)
-	with open(filename, "wb") as f:
-		f.write(base64.b64decode(b64_data))
+	b64image = request.get_json("image")["image"]
+	header, b64_data = b64image.split(",", 1)
+	file_format = header.split("/")[1].split(";")[0]
+	filename = f"output.{file_format}"
 
-	image_data = base64.b64decode(b64image)
-	print(b64image)
-	with open("output.png", "wb") as f:
+	image_data = base64.b64decode(b64_data)
+	# print(b64image)
+	with open(filename, "wb") as f:
 		f.write(image_data)
 	return image_data
 
