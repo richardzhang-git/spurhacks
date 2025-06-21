@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from google import genai
+from google.genai import types
 import base64
 import json
 
@@ -39,6 +40,21 @@ def getbarcode():
 	with open(filename, "wb") as f:
 		f.write(base64.b64decode(b64_data))
 
+def detectItem(image_bytes):
+	key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
+	client = genai.Client(api_key=key)
+	response = client.models.generate_content(
+		model='gemini-2.5-flash',
+		contents=[
+			types.Part.from_bytes(
+				data=image_bytes,
+				mime_type='image/png',
+			),
+			'What food or ingredient is in the image? Please provide a concise and short answer, preferable just the food/ingredient\'s name'
+		]
+	)
+	return response.text
+
 
 def recipePrompt(ingredients:list[str], expiry_dates:list[str], num:int):
 	prompt = f'''List {num} popular recipes, and include the amounts of ingredients and the steps to make the recipe.
@@ -51,6 +67,7 @@ Produce JSON matching this specification
 Recipe = { "recipeName": string, "ingredients": array<string> , "steps": string}
 Return: array<Recipe>'''
 	return prompt
+
 def getRecipes():
 	key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
 	client = genai.Client(api_key=key)
@@ -60,5 +77,3 @@ def getRecipes():
 	)
 	# print(response.text[7:-3].strip())
 	return {"responses": json.loads(response.text[7:-3].strip())}
-
-print(getRecipes()[0])
