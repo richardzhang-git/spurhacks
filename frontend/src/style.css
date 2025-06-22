@@ -5,8 +5,12 @@
     flex: auto;
 }
 
-#logo {
-    /* CSS styles removed - now controlled by JSX inline styles */
+body.recipes-bg {
+  background-image: url('/Recipe_BG.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .beigebg {
@@ -31,7 +35,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 2vh;
+    margin-top: 0.25vh;
     width: 300px;
 }
 

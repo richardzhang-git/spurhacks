@@ -4,10 +4,26 @@ import viteLogo from '/vite.svg'
 document.querySelector('#app').innerHTML = /*html*/ `
 <video id="video" autoplay playsinline style="display: none;"></video>
 <canvas id="canvas" width="360" height="360"></canvas>
-<div id="message" style="margin: 10px 0; color: green;">Take a photo to begin</div>
-<div id="controls">
-    <button id="take-bb" class="btn btn-primary">Find Item</button>
+<div id="message" style="margin: 24px 0 24px 0; color: white; font-size: 1rem; text-align: center; position: absolute; width: 100%; top: 65%;">Take a photo to begin</div>
+<div id="controls" style="display: flex; justify-content: center; align-items: center; flex-direction: column; position: absolute; width: 100%; top: 75%;">
+    <button id="take-bb" class="btn btn-primary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 200px;">Find Item</button>
 </div>
+<style>
+.loader {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #888;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
 `
 
 const video = document.getElementById('video');
@@ -61,6 +77,13 @@ navigator.mediaDevices.getUserMedia({
 controls.addEventListener('click', async (event) => {
     if (event.target.id === 'take-bb') {
         isFrozen = true;
+        // Show loader and disable button
+        controls.innerHTML = `
+            <button id="take-bb" class="btn btn-primary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 200px;" disabled>
+                <span class="loader"></span>Working...
+            </button>
+        `;
+
         const imageData = canvas.toDataURL(); // Default is image/png
 
         try {
@@ -77,18 +100,19 @@ controls.addEventListener('click', async (event) => {
             }
 
             const data = await response.json(); // Parse JSON response
-            console.log('Response from Flask:', data);
-            var temp_arr = '[' + localStorage.getItem("key") + ']';
-            console.log(temp_arr);
-            temp_arr = JSON.parse(temp_arr);
-            console.log(temp_arr);
-            temp_arr.push([data]);
-            console.log(temp_arr);
-            for (let i = 0; i < temp_arr.length; i++) {
-                temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
+
+            // --- CHANGED: Store as array of objects in localStorage ---
+            let ingredients = [];
+            try {
+                ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+            } catch {
+                ingredients = [];
             }
-            console.log(temp_arr);
-            localStorage.setItem("key", temp_arr);
+            // Add new ingredient as an object with name, expiry will be added later
+            ingredients.push({ name: data, daysUntilExpire: "" });
+            localStorage.setItem("ingredients", JSON.stringify(ingredients));
+            // ---------------------------------------------------------
+
             changeText('Food detected: ' + data);  // Show result
         } catch (err) {
             console.error('Error:', err);
@@ -99,38 +123,38 @@ controls.addEventListener('click', async (event) => {
 
         // Replace button with Confirm/Cancel
         controls.innerHTML = `
-            <button id="confirm" class="btn btn-success">Confirm</button>
-            <button id="retry" class="btn btn-secondary">Retry</button>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="confirm" class="btn btn-success" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 150px;">Confirm</button>
+                <button id="retry" class="btn btn-secondary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 150px;">Retry</button>
+            </div>
         `;
     }
 
     // Handle "Cancel"
     if (event.target.id === 'retry') {
-        var temp_arr = '[' + localStorage.getItem("key") + ']';
-        console.log(temp_arr);
-        temp_arr = JSON.parse(temp_arr);
-        console.log(temp_arr);
-        temp_arr.pop();
-        console.log(temp_arr);
-        for (let i = 0; i < temp_arr.length; i++) {
-            temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]';
-            console.log(temp_arr[i]);
+        // --- CHANGED: Remove last object from array of objects ---
+        let ingredients = [];
+        try {
+            ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+        } catch {
+            ingredients = [];
         }
-        console.log(temp_arr);
-        localStorage.setItem("key", temp_arr);
+        ingredients.pop();
+        localStorage.setItem("ingredients", JSON.stringify(ingredients));
+        // --------------------------------------------------------
+
         isFrozen = false;
         changeText("Take a photo to begin");
         drawFrame();
         // Restore original button
         controls.innerHTML = `
-            <button id="take-bb" class="btn btn-primary">Find Item</button>
+            <button id="take-bb" class="btn btn-primary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 200px;">Find Item</button>
         `;
     }
 
     // Handle "Confirm"
     if (event.target.id === 'confirm') {
-        controls.innerHTML = `<span>Processing...</span>`;
-        // You can add more functionality here
+        controls.innerHTML = `<span style="font-size:1.3rem;">Processing...</span>`;
         window.location.href = '/bestbefore/';
     }
 });

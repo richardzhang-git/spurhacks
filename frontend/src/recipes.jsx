@@ -1,52 +1,41 @@
 import React, { useState } from 'https://esm.sh/react@18.2.0';
 import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+import './style.css'; // Ensure CSS is imported
 
 const RecipesApp = () => {
-  const [recipes, setRecipes] = useState([]); // Start with an empty array for recipes
+  const [recipes, setRecipes] = useState([]);
   const [generated, setGenerated] = useState(false);
+  const [loading, setLoading] = useState(false); // <-- Loader state
 
   const handleButtonClick = async () => {
+    setLoading(true); // Start loader
     try {
-        var temp_arr = '[' + localStorage.getItem("key") + ']';
-        temp_arr = JSON.parse(temp_arr);
-        console.log("hello there", temp_arr);
-        var ingredient_arr = []
-        for (let i = 2; i < temp_arr.length; i++) {
-            ingredient_arr.push({ingredient: temp_arr[i][0], expiry: temp_arr[i][1]});
-            console.log(temp_arr[i]);
-        }
-        console.log(ingredient_arr);
-      // Correct URL for Flask backend API
+      var temp_arr = '[' + localStorage.getItem("key") + ']';
+      temp_arr = JSON.parse(temp_arr);
+      var ingredient_arr = [];
+      for (let i = 2; i < temp_arr.length; i++) {
+        ingredient_arr.push({ ingredient: temp_arr[i][0], expiry: temp_arr[i][1] });
+      }
       const response = await fetch('http://localhost:8080/getrecipes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ingredients: ingredient_arr,
-          }),
-        });
-      console.log('recipes:', response);
-      // Check if the response is successful (status code 2xx)
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients: ingredient_arr }),
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      // Parse the JSON response
       const data = await response.json();
-      console.log(data); // Log to check the response
-
-      // Update the state with the recipes fetched from the Flask API
       setRecipes(data.responses);
-      setGenerated(true); // Mark the recipes as generated
-
+      setGenerated(true);
     } catch (error) {
       console.error('Error fetching recipes:', error);
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
-  // Function to handle Home button click
   const handleHomeClick = () => {
-    // You can add additional logic if needed for the home button
-    window.location.href = '/home/';  // Navigate to the home page
+    window.location.href = '/home/';
   };
 
   return React.createElement(
@@ -55,13 +44,11 @@ const RecipesApp = () => {
       style: {
         width: '360px',
         height: '780px',
-        backgroundColor: 'white',
         border: '1px solid black',
         fontFamily: 'monospace',
         overflow: 'hidden',
       },
     },
-
     // Header
     React.createElement(
       'header',
@@ -83,7 +70,7 @@ const RecipesApp = () => {
           marginRight: '8px',
           cursor: 'pointer',
         },
-        onClick: handleHomeClick, // Use the home button handler here
+        onClick: handleHomeClick,
       }),
       React.createElement(
         'h1',
@@ -98,7 +85,6 @@ const RecipesApp = () => {
         'Recipes'
       )
     ),
-
     // Button (Generate / Reroll)
     React.createElement(
       'div',
@@ -113,24 +99,49 @@ const RecipesApp = () => {
             backgroundColor: '#d1d1d1',
             border: '1px solid black',
             fontFamily: 'monospace',
-            cursor: 'pointer',
+            cursor: loading ? 'not-allowed' : 'pointer',
             textAlign: 'center',
+            color: 'black',
+            opacity: loading ? 0.6 : 1,
+            position: 'relative',
           },
-          onClick: handleButtonClick,  // Reroll button click triggers the normal flow
+          onClick: loading ? undefined : handleButtonClick,
+          disabled: loading,
         },
-        generated ? 'Reroll' : 'Generate'
+        loading
+          ? React.createElement(
+              'span',
+              { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' } },
+              React.createElement(
+                'span',
+                {
+                  className: 'loader',
+                  style: {
+                    display: 'inline-block',
+                    width: '18px',
+                    height: '18px',
+                    border: '3px solid #888',
+                    borderTop: '3px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                  },
+                }
+              ),
+              'Loading...'
+            )
+          : generated ? 'Reroll' : 'Generate'
       )
     ),
-
     // Recipe Cards (hidden until generated)
     generated &&
       React.createElement(
         'div',
         {
           style: {
-            overflowY: 'auto',  // Allows scrolling
-            height: 'calc(100% - 200px)',  // Ensures the scrolling area takes up remaining space
+            overflowY: 'auto',
+            height: 'calc(100% - 200px)',
             padding: '0 16px',
+            color: 'black',
           },
         },
         recipes.map((recipe, i) =>
@@ -152,7 +163,8 @@ const RecipesApp = () => {
                 fontFamily: 'monospace',
                 position: 'relative',
                 overflow: 'hidden',
-                cursor: 'default',  // Makes it clear that the card is no longer clickable
+                color: 'black',
+                cursor: 'default',
               },
             },
             React.createElement(
@@ -161,14 +173,13 @@ const RecipesApp = () => {
                 style: {
                   marginBottom: '8px',
                   fontWeight: 'bold',
-                  fontSize: '1.1em',  // Slightly smaller font
+                  fontSize: '1.1em',
                   textAlign: 'center',
+                  color: 'black',
                 },
               },
-              recipe.recipeName // The title comes from the API response
+              recipe.recipeName
             ),
-
-            // Ingredients List (if present in the response)
             recipe.ingredients && React.createElement(
               'h3',
               {
@@ -187,7 +198,7 @@ const RecipesApp = () => {
                 style: {
                   margin: 0,
                   paddingLeft: '20px',
-                  fontSize: '0.9em',  // Slightly smaller font for ingredients
+                  fontSize: '0.9em',
                   lineHeight: '1.3em',
                   listStyleType: 'circle',
                 },
@@ -196,8 +207,6 @@ const RecipesApp = () => {
                 React.createElement('li', { key: idx }, ingredient)
               )
             ),
-
-            // Steps List (if present in the response)
             React.createElement(
               'h3',
               {
@@ -217,17 +226,17 @@ const RecipesApp = () => {
                 style: {
                   margin: 0,
                   paddingLeft: '20px',
-                  fontSize: '0.9em',  // Smaller font for steps
-                  lineHeight: '1.3em',  // More compact line height
+                  fontSize: '0.9em',
+                  lineHeight: '1.3em',
                   listStyleType: 'decimal',
                   listStylePosition: 'inside',
                 },
               },
               Array.isArray(recipe.steps)
-                  ? recipe.steps.map((step, idx) =>
-                      React.createElement('li', { key: idx }, step)
-                    )
-                  : React.createElement('li', {}, 'No steps provided')
+                ? recipe.steps.map((step, idx) =>
+                    React.createElement('li', { key: idx }, step)
+                  )
+                : React.createElement('li', {}, 'No steps provided')
             )
           )
         )
@@ -235,12 +244,19 @@ const RecipesApp = () => {
   );
 };
 
+// Add loader animation CSS
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+`;
+document.head.appendChild(style);
+
 // Mount
 const rootElement = document.getElementById('root-recipes');
-
 if (!rootElement) {
   throw new Error('Missing <div id="root-recipes"></div> in your HTML.');
 }
-
 const root = ReactDOM.createRoot(rootElement);
 root.render(React.createElement(RecipesApp));

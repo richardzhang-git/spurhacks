@@ -37,6 +37,9 @@ const App = () => {
         {
           className:
             'flex justify-between items-center p-4 border-b-2 border-black',
+          style: {
+            paddingTop: '0'
+          }
         },
         React.createElement(
           'h1',
@@ -49,7 +52,7 @@ const App = () => {
          React.createElement('img', {
             src: '/Home.png',
             alt: 'Home Icon',
-          className: 'w-30 h-30', // icon size
+          className: 'w-20 h-20', // icon size
           
         }),
         React.createElement('div', { 
