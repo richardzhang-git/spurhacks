@@ -28,7 +28,7 @@ export default function Login() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          opacity: 1,
+          opacity: 0.7,
           zIndex: -1
         }}
       />
