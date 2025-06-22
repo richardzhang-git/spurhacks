@@ -16,6 +16,13 @@
     border-radius: 50%;
 }
 
+.beigebg {
+    background-color: #e5dfbf;
+    min-height: 100vh;
+    margin: 0;
+
+}
+
 #login {
     margin-top: 0;
 }
