@@ -102,10 +102,20 @@ Recipe = { "recipeName": string, "ingredients": array<string> , "steps": string}
 Return: array<Recipe>'''
 	return prompt
 
+
+@app.route('/getrecipes', methods=['POST', 'OPTIONS'])
 def getRecipes():
 	key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
 	client = genai.Client(api_key=key)
-	prompt = recipePrompt(["eggs", "milk"], ["2025-04-27","2026-03-31"], 3)
+
+	ingredients_expiry = json.loads(request.args.get("ingredients"))
+	ingredients_list = []
+	expiry_dates = []
+	for ingredient, expiry in ingredients_expiry:
+		ingredients_list.append(ingredient)
+		expiry_dates.append(expiry)
+
+	prompt = recipePrompt(ingredients_list, expiry_dates, 3)
 	response = client.models.generate_content(
 		model="gemini-2.5-flash", contents=prompt
 	)
