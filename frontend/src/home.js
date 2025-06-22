@@ -16,7 +16,7 @@ const App = () => {
 
   return React.createElement(
     'div',
-    { className: 'min-h-screen flex items-center justify-center p-4' },
+    { className: 'min-h-screen flex items-center justify-center p-4'},
     React.createElement(
       'div',
       {
@@ -46,6 +46,16 @@ const App = () => {
           },
           'Home'
         ),
+         React.createElement('img', {
+            src: '/Home.png',
+            alt: 'Home Icon',
+          className: 'w-30 h-30', // icon size
+          
+        }),
+        React.createElement('div', { 
+            className: 'flex items-center gap-2' 
+          
+        }),
         React.createElement(
           'button',
           {
@@ -83,13 +93,17 @@ const App = () => {
           {
             id: 'fridge',
             className:
-              'card relative p-4 min-h-[250px] flex flex-col justify-start items-center text-black font-mono text-xl cursor-pointer rounded-lg overflow-hidden',
+              'relative h-64 w-full rounded-lg overflow-hidden cursor-pointer shadow-md',
             onClick: handleFridgeClick,
           },
           React.createElement('img', {
             src: '/Fridge.png',
             alt: 'Fridge',
-            className: 'absolute inset-0 w-full h-full object-cover z-0',
+            className: 'absolute inset-0 w-full h-full object-contain z-0',
+            style: {
+                objectFit: 'contain',
+                objectPosition: 'center 20%',
+            },
           }),
           React.createElement(
             'p',
@@ -102,7 +116,7 @@ const App = () => {
                 textAlign: 'center',
                 padding: '0 1rem',
                 boxSizing: 'border-box',
-                top: '50%',
+                top: '90%',
                 left: '0',
                 transform: 'translateY(-50%)',
               },
@@ -117,33 +131,15 @@ const App = () => {
           {
             id: 'recipes',
             className:
-              'card relative p-4 min-h-[220px] flex flex-col justify-start items-center text-black font-mono text-xl cursor-pointer rounded-lg overflow-hidden',
+              'relative h-64 rounded-lg overflow-hidden shadow-md cursor-pointer',
           },
           React.createElement('img', {
             src: '/RecipeBook.png',
             alt: 'Recipe Book',
             className: 'absolute inset-0 w-full h-full object-cover z-0',
-            style: { objectPosition: 'center 70%' },
+            style: { objectPosition: 'center 100%' },
             onClick: handleBookClick,
           }),
-          React.createElement(
-            'p',
-            {
-              className:
-                'absolute text-white text-3xl font-extrabold z-10',
-              style: {
-                textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                width: '100%',
-                textAlign: 'center',
-                padding: '0 1rem',
-                boxSizing: 'border-box',
-                top: '50%',
-                left: '0',
-                transform: 'translateY(-50%)',
-              },
-            },
-            React.createElement('span', { className: 'font-bold' }, 'Recipes')
-          )
         )
       )
     )

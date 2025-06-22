@@ -9,6 +9,13 @@
     /* CSS styles removed - now controlled by JSX inline styles */
 }
 
+.beigebg {
+    background-color: #e5dfbf;
+    min-height: 100vh;
+    margin: 0;
+
+}
+
 #login {
     margin-top: 0;
 }
