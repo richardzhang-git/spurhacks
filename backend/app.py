@@ -6,7 +6,11 @@ from google.genai import types
 import base64
 import json
 from datetime import date, timedelta
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+api_key = os.getenv("MY_API_KEY")
 app = Flask(__name__)
 
 # CORS configuration
@@ -74,7 +78,7 @@ def getbarcode():
         f.write(base64.b64decode(b64_data))
 
 def detectItem(image_bytes):
-    key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
+    key = f"{api_key}"
     client = genai.Client(api_key=key)
     response = client.models.generate_content(
         model='gemini-2.5-flash',
@@ -134,7 +138,7 @@ def get_recipes():
             exp_dates.append(d['expiry'])
         print(ingredients, exp_dates)
         prompt = recipePrompt(ingredients, exp_dates, 3)
-        key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
+        key = f"{api_key}"
         client = genai.Client(api_key=key)
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -152,7 +156,7 @@ def get_recipes():
 
 
 def detectBB(image_bytes):
-    key = "AIzaSyDMD99XhnZERlMD0Q3lUC1CLvWbtkQTGV0"
+    key = f"{api_key}"
     client = genai.Client(api_key=key)
     response = client.models.generate_content(
         model='gemini-2.5-flash',
