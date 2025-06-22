@@ -13,7 +13,8 @@ export default defineConfig({
 				getitem: 'getitem/index.html',
 				home: 'home/index.html',
 				ingredients: 'myfridge/index.html',
-				recipes: 'recipes/index.html'
+				recipes: 'recipes/index.html',
+				myfridge: 'myfridge/index.html',
 			},
 		},
 	},

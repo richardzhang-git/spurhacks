@@ -4,6 +4,16 @@ import React from 'https://esm.sh/react@18.2.0';
 import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
 
 const App = () => {
+  // Function to run when fridge card is clicked
+  const handleFridgeClick = () => {
+    window.location.href = '/myfridge/'
+    // Add any other logic you want here
+  };
+  const handleBookClick = () => {
+    window.location.href = '/myfridge/'
+    // Add any other logic you want here
+  };
+
   return React.createElement(
     'div',
     { className: 'min-h-screen flex items-center justify-center p-4' },
@@ -17,7 +27,7 @@ const App = () => {
           border: 'none',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'start', // Changed from default to align top content nicely
+          justifyContent: 'start',
         },
       },
 
@@ -67,13 +77,14 @@ const App = () => {
           style: { gap: '1.5rem' },
         },
 
-        // Ingredients Card
+        // Ingredients Card with onClick handler
         React.createElement(
           'div',
           {
             id: 'fridge',
             className:
               'card relative p-4 min-h-[250px] flex flex-col justify-start items-center text-black font-mono text-xl cursor-pointer rounded-lg overflow-hidden',
+            onClick: handleFridgeClick,
           },
           React.createElement('img', {
             src: '/Fridge.png',
@@ -84,8 +95,17 @@ const App = () => {
             'p',
             {
               className:
-                'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white text-3xl font-extrabold z-10',
-              style: { textShadow: '2px 2px 4px rgba(0,0,0,0.7)' },
+                'absolute text-white text-3xl font-extrabold z-10',
+              style: {
+                textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                width: '100%',
+                textAlign: 'center',
+                padding: '0 1rem',
+                boxSizing: 'border-box',
+                top: '50%',
+                left: '0',
+                transform: 'translateY(-50%)',
+              },
             },
             React.createElement('span', { className: 'font-bold' }, 'Ingredients')
           )
@@ -103,13 +123,24 @@ const App = () => {
             src: '/RecipeBook.png',
             alt: 'Recipe Book',
             className: 'absolute inset-0 w-full h-full object-cover z-0',
+            style: { objectPosition: 'center 70%' },
+            onClick: handleBookClick,
           }),
           React.createElement(
             'p',
             {
               className:
-                'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white text-3xl font-extrabold z-10',
-              style: { textShadow: '2px 2px 4px rgba(0,0,0,0.7)' },
+                'absolute text-white text-3xl font-extrabold z-10',
+              style: {
+                textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                width: '100%',
+                textAlign: 'center',
+                padding: '0 1rem',
+                boxSizing: 'border-box',
+                top: '50%',
+                left: '0',
+                transform: 'translateY(-50%)',
+              },
             },
             React.createElement('span', { className: 'font-bold' }, 'Recipes')
           )
