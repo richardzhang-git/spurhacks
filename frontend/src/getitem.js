@@ -110,7 +110,7 @@ controls.addEventListener('click', async (event) => {
 //            }
             // Add new ingredient as an object with name, expiry will be added later
             ingredients.push({ name: data, daysUntilExpire: "" });
-            localStorage.setItem("key", JSON.stringify(ingredients));
+            localStorage.setItem("key", JSON.stringify(ingredients).slice(1,-1));
             // ---------------------------------------------------------
 
             changeText('Food detected: ' + data);  // Show result
@@ -133,14 +133,9 @@ controls.addEventListener('click', async (event) => {
     // Handle "Cancel"
     if (event.target.id === 'retry') {
         // --- CHANGED: Remove last object from array of objects ---
-        let ingredients = [];
-        try {
-            ingredients = JSON.parse(localStorage.getItem("key")) || [];
-        } catch {
-            ingredients = [];
-        }
+        let ingredients = JSON.parse('['+localStorage.getItem("key")+']')
         ingredients.pop();
-        localStorage.setItem("key", JSON.stringify(ingredients));
+        localStorage.setItem("key", JSON.stringify(ingredients).slice(1, -1));
         // --------------------------------------------------------
 
         isFrozen = false;

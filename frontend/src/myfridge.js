@@ -6,7 +6,7 @@ import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
 const STORAGE_KEY = "key";
 
 const getIngredients = () => {
-  const raw = localStorage.getItem(STORAGE_KEY);
+  const raw = '['+localStorage.getItem(STORAGE_KEY)+']';
   if (!raw) return [];
   try {
     return JSON.parse(raw);
@@ -16,7 +16,7 @@ const getIngredients = () => {
 };
 
 const setIngredients = (arr) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr).slice(1, -1));
 };
 
 const MyFridgeApp = () => {
@@ -33,7 +33,8 @@ const MyFridgeApp = () => {
   // Delete ingredient by index
   const handleDelete = (idx) => {
     const newArr = [...ingredients];
-    newArr.splice(idx, 1);
+    console.log(idx);
+    newArr.splice(idx+2, 1);
     setIngredients(newArr);
     setIngredientsState(newArr);
   };
@@ -89,7 +90,7 @@ const MyFridgeApp = () => {
           height: `${containerHeight - headerHeight}px`,
           boxSizing: 'border-box',
         },
-      },
+      },console.log("hi", ingredients),
       console.log(ingredients[2]),
       ingredients.slice(2,ingredients.length).map((item, index) =>
         React.createElement(

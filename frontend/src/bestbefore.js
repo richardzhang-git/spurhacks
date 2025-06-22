@@ -97,16 +97,11 @@ controls.addEventListener('click', async (event) => {
 
             const text = JSON.parse(await response.text());
             // --- CHANGED: Store as array of objects in localStorage ---
-            let ingredients = [];
-            try {
-                ingredients = JSON.parse(localStorage.getItem("key")) || [];
-            } catch {
-                ingredients = [];
-            }
+            let ingredients = JSON.parse('['+localStorage.getItem("key")+']');
             // Add best before date to the last ingredient object
             if (ingredients.length > 0) {
                 ingredients[ingredients.length - 1].daysUntilExpire = text.result;
-                localStorage.setItem("key", JSON.stringify(ingredients));
+                localStorage.setItem("key", JSON.stringify(ingredients).slice(1, -1));
             }
             changeText("Date detected: " + text.result);
 
@@ -141,15 +136,11 @@ controls.addEventListener('click', async (event) => {
 
             const json = await response.json();
             // --- CHANGED: Store as array of objects in localStorage ---
-            let ingredients = [];
-            try {
-                ingredients = JSON.parse(localStorage.getItem("key")) || [];
-            } catch {
-                ingredients = [];
-            }
+            let ingredients = JSON.parse('['+localStorage.getItem("key")+']');
+            console.log(ingredients)
             if (ingredients.length > 0) {
                 ingredients[ingredients.length - 1].daysUntilExpire = json.date;
-                localStorage.setItem("key", JSON.stringify(ingredients));
+                localStorage.setItem("key", JSON.stringify(ingredients).slice(1,-1));
             }
             changeText("Estimated expiry date: " + json.date);
 
@@ -174,12 +165,13 @@ controls.addEventListener('click', async (event) => {
         // --- CHANGED: Remove last object from array of objects ---
         let ingredients = [];
         try {
-            ingredients = JSON.parse(localStorage.getItem("key")) || [];
+            ingredients = JSON.parse('['+localStorage.getItem("key")+']') || [];
         } catch {
             ingredients = [];
         }
-        ingredients.pop();
-        localStorage.setItem("key", JSON.stringify(ingredients));
+        console.log(ingredients[ingredients.length - 1])
+        ingredients[ingredients.length - 1].daysUntilExpire = "";
+        localStorage.setItem("key", JSON.stringify(ingredients).slice(1, -1));
         // --------------------------------------------------------
 
         changeText("Take a photo to begin");
