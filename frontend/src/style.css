@@ -6,14 +6,7 @@
 }
 
 #logo {
-    width: 175px;
-    height: 175px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 25vh;
-    translate: 0 -50%;
-    background-color: gray;
-    border-radius: 50%;
+    /* CSS styles removed - now controlled by JSX inline styles */
 }
 
 #login {
@@ -31,7 +24,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5vh;
+    margin-top: 2vh;
     width: 300px;
 }
 
@@ -45,7 +38,7 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background-color: #fff;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: flex-start;
