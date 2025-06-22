@@ -86,7 +86,7 @@ controls.addEventListener('click', async (event) => {
             }
             console.log(temp_arr);
             localStorage.setItem("key", temp_arr);
-            changeText("Date detected: ");
+            changeText("Date detected: ", text.result);
 
         } catch (err) {
             console.error('Error:', err);
@@ -111,6 +111,17 @@ controls.addEventListener('click', async (event) => {
 
             const json = await response.json();  // backend returns JSON here
             console.log("Response JSON:", json);
+            var temp_arr = '[' + localStorage.getItem("key") + ']';
+            console.log(temp_arr);
+            temp_arr = JSON.parse(temp_arr);
+            console.log(temp_arr[temp_arr.length - 1]);
+            temp_arr[temp_arr.length - 1].push(json["date"]);
+            console.log(temp_arr[temp_arr.length - 1]);
+            for (let i = 0; i < temp_arr.length; i++) {
+                temp_arr[i] = '["' + temp_arr[i].join('", "') + '"]'
+            }
+            console.log(temp_arr);
+            localStorage.setItem("key", temp_arr);
             changeText("Estimated expiry date: " + json.date);
 
         } catch (err) {

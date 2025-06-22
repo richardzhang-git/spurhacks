@@ -7,15 +7,21 @@ const RecipesApp = () => {
 
   const handleButtonClick = async () => {
     try {
+        var temp_arr = '[' + localStorage.getItem("key") + ']';
+        temp_arr = JSON.parse(temp_arr);
+        console.log("hello there", temp_arr);
+        var ingredient_arr = []
+        for (let i = 2; i < temp_arr.length; i++) {
+            ingredient_arr.push({ingredient: temp_arr[i][0], expiry: temp_arr[i][1]});
+               console.log(temp_arr[i]);
+        }
+        console.log(ingredient_arr);
       // Correct URL for Flask backend API
       const response = await fetch('http://localhost:8080/getrecipes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            ingredients: [
-              { ingredient: 'flour', expiry: '2025-06-30' },
-              { ingredient: 'eggs', expiry: '2025-06-25' },
-            ],
+            ingredients: ingredient_arr,
           }),
         });
       console.log('recipes:', response);

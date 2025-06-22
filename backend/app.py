@@ -27,6 +27,12 @@ def log_response(response):
 
 @app.route('/getbb', methods=['POST', 'OPTIONS'])
 def getbb():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
     data = request.get_json()
     b64image = data["image"]
     header, b64_data = b64image.split(",", 1)
@@ -35,6 +41,12 @@ def getbb():
 
 @app.route('/getitem', methods=['POST', 'OPTIONS'])
 def getitem():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
     data = request.get_json()
     b64image = data["image"]
     header, b64_data = b64image.split(",", 1)
@@ -43,6 +55,12 @@ def getitem():
 
 @app.route('/getbarcode', methods=['POST', 'OPTIONS'])
 def getbarcode():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
     b64image = request.args.get("image")
     if b64image.startswith("data:image"):
         header, b64_data = b64image.split(",", 1)
@@ -73,6 +91,12 @@ def detectItem(image_bytes):
 
 @app.route('/guessTime', methods=['POST', 'OPTIONS'])
 def guessTime():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
     data = request.get_json(silent=True)
     shelf_life_days = random.randint(9, 10)
     expiry_date = date.today() + timedelta(days=shelf_life_days)
@@ -90,8 +114,14 @@ def recipePrompt(ingredients: list[str], expiry_dates: list[str], num: int):
     Return: array<Recipe>'''
     return prompt
 
-@app.route('/getrecipes', methods=['POST'])
+@app.route('/getrecipes', methods=['POST', 'OPTIONS'])
 def get_recipes():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response, 200
     try:
         data = request.get_json(force=True) or {}
         print(data)

@@ -102,7 +102,7 @@ const MyFridgeApp = () => {
               React.createElement(
                 'p',
                 { className: 'text-black font-mono text-sm' },
-                `[${item.daysUntilExpire} Days until expire]`
+                `[Expires on ${item.daysUntilExpire}]`
               )
           )
         )
