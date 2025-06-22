@@ -65,7 +65,7 @@ controls.addEventListener('click', async (event) => {
         const imageData = canvas.toDataURL(); // Default is image/png
 
         try {
-            const response = await fetch('http://127.0.0.1:5050/getbb', {
+            const response = await fetch('http://127.0.0.1:8080/getbb', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ controls.addEventListener('click', async (event) => {
     }
     if (event.target.id === 'guess-bb') {
         try {
-            const response = await fetch('http://127.0.0.1:5050/guessTime', {
+            const response = await fetch('http://127.0.0.1:8080/guessTime', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({"item":"cheese"})
