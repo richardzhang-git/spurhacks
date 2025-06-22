@@ -10,12 +10,15 @@ const RecipesApp = () => {
   const handleButtonClick = async () => {
     setLoading(true); // Start loader
     try {
-      var temp_arr = '[' + localStorage.getItem("key") + ']';
+      var temp_arr = localStorage.getItem("key");
+      console.log(temp_arr, "was drawn from storage")
       temp_arr = JSON.parse(temp_arr);
       var ingredient_arr = [];
       for (let i = 2; i < temp_arr.length; i++) {
-        ingredient_arr.push({ ingredient: temp_arr[i][0], expiry: temp_arr[i][1] });
+        ingredient_arr.push({ ingredient: temp_arr[i]["name"], expiry: temp_arr[i]["daysUntilExpire"] });
+        console.log(i);
       }
+        console.log("oh", ingredient_arr);
       const response = await fetch('http://localhost:8080/getrecipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

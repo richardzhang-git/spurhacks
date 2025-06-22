@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 document.querySelector('#app').innerHTML = /*html*/ `
 <video id="video" autoplay playsinline style="display: none;"></video>
 <canvas id="canvas" width="360" height="360"></canvas>
-<div id="message" style="margin: 24px 0 24px 0; color: white; font-size: 1rem; text-align: center; position: absolute; width: 100%; top: 58%;" >Take a photo to begin</div>
+<div id="message" style="margin: 24px 0 24px 0; color: grey; font-size: 1rem; text-align: center; position: absolute; width: 100%; top: 58%;" >Take a photo to begin</div>
 <div id="controls" style="display: flex; justify-content: center; align-items: center; flex-direction: column; position: absolute; width: 100%; top: 68%;">
     <button id="take-bb" class="btn btn-primary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 200px;">Find Best Before Date</button>
     <button id="guess-bb" class="btn btn-primary" style="font-size: 1.3rem; padding: 1rem 2.5rem; min-width: 200px; margin-top: 1rem;">No Exact Date</button>
@@ -99,14 +99,14 @@ controls.addEventListener('click', async (event) => {
             // --- CHANGED: Store as array of objects in localStorage ---
             let ingredients = [];
             try {
-                ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+                ingredients = JSON.parse(localStorage.getItem("key")) || [];
             } catch {
                 ingredients = [];
             }
             // Add best before date to the last ingredient object
             if (ingredients.length > 0) {
                 ingredients[ingredients.length - 1].daysUntilExpire = text.result;
-                localStorage.setItem("ingredients", JSON.stringify(ingredients));
+                localStorage.setItem("key", JSON.stringify(ingredients));
             }
             changeText("Date detected: " + text.result);
 
@@ -143,13 +143,13 @@ controls.addEventListener('click', async (event) => {
             // --- CHANGED: Store as array of objects in localStorage ---
             let ingredients = [];
             try {
-                ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+                ingredients = JSON.parse(localStorage.getItem("key")) || [];
             } catch {
                 ingredients = [];
             }
             if (ingredients.length > 0) {
                 ingredients[ingredients.length - 1].daysUntilExpire = json.date;
-                localStorage.setItem("ingredients", JSON.stringify(ingredients));
+                localStorage.setItem("key", JSON.stringify(ingredients));
             }
             changeText("Estimated expiry date: " + json.date);
 
@@ -174,12 +174,12 @@ controls.addEventListener('click', async (event) => {
         // --- CHANGED: Remove last object from array of objects ---
         let ingredients = [];
         try {
-            ingredients = JSON.parse(localStorage.getItem("ingredients")) || [];
+            ingredients = JSON.parse(localStorage.getItem("key")) || [];
         } catch {
             ingredients = [];
         }
         ingredients.pop();
-        localStorage.setItem("ingredients", JSON.stringify(ingredients));
+        localStorage.setItem("key", JSON.stringify(ingredients));
         // --------------------------------------------------------
 
         changeText("Take a photo to begin");

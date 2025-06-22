@@ -3,7 +3,7 @@ import './myfridge.css';
 import React, { useState, useEffect, useRef } from 'https://esm.sh/react@18.2.0';
 import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
 
-const STORAGE_KEY = "ingredients";
+const STORAGE_KEY = "key";
 
 const getIngredients = () => {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -90,7 +90,8 @@ const MyFridgeApp = () => {
           boxSizing: 'border-box',
         },
       },
-      ingredients.map((item, index) =>
+      console.log(ingredients[2]),
+      ingredients.slice(2,ingredients.length).map((item, index) =>
         React.createElement(
           'div',
           {
