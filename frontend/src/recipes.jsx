@@ -13,7 +13,7 @@ const RecipesApp = () => {
         var ingredient_arr = []
         for (let i = 2; i < temp_arr.length; i++) {
             ingredient_arr.push({ingredient: temp_arr[i][0], expiry: temp_arr[i][1]});
-               console.log(temp_arr[i]);
+            console.log(temp_arr[i]);
         }
         console.log(ingredient_arr);
       // Correct URL for Flask backend API
@@ -41,6 +41,12 @@ const RecipesApp = () => {
     } catch (error) {
       console.error('Error fetching recipes:', error);
     }
+  };
+
+  // Function to handle Home button click
+  const handleHomeClick = () => {
+    // You can add additional logic if needed for the home button
+    window.location.href = '/home/';  // Navigate to the home page
   };
 
   return React.createElement(
@@ -77,7 +83,7 @@ const RecipesApp = () => {
           marginRight: '8px',
           cursor: 'pointer',
         },
-        onClick: () => (window.location.href = './index.html'),
+        onClick: handleHomeClick, // Use the home button handler here
       }),
       React.createElement(
         'h1',
@@ -110,7 +116,7 @@ const RecipesApp = () => {
             cursor: 'pointer',
             textAlign: 'center',
           },
-          onClick: handleButtonClick,
+          onClick: handleButtonClick,  // Reroll button click triggers the normal flow
         },
         generated ? 'Reroll' : 'Generate'
       )
@@ -217,7 +223,6 @@ const RecipesApp = () => {
                   listStylePosition: 'inside',
                 },
               },
-                console.log(recipe),
               Array.isArray(recipe.steps)
                   ? recipe.steps.map((step, idx) =>
                       React.createElement('li', { key: idx }, step)
