@@ -10,7 +10,7 @@ const App = () => {
     // Add any other logic you want here
   };
   const handleBookClick = () => {
-    window.location.href = '/myfridge/'
+    window.location.href = '/recipes/'
     // Add any other logic you want here
   };
 
