@@ -21,6 +21,7 @@ const setIngredients = (arr) => {
 
 const MyFridgeApp = () => {
   const [ingredients, setIngredientsState] = React.useState(getIngredients());
+  const [isShaking, setIsShaking] = React.useState(false);  // Added shaking state
 
   const addIngredient = () => {
     window.location.href = '/getitem/';
@@ -34,7 +35,7 @@ const MyFridgeApp = () => {
   const handleDelete = (idx) => {
     const newArr = [...ingredients];
     console.log(idx);
-    newArr.splice(idx+2, 1);
+    newArr.splice(idx + 2, 1);
     setIngredients(newArr);
     setIngredientsState(newArr);
   };
@@ -51,6 +52,16 @@ const MyFridgeApp = () => {
     setIngredientsState(getIngredients());
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
+
+  // Home icon click handler with shake effect + redirect
+  const handleHomeClick = () => {
+    if (isShaking) return; // prevent double clicks during shake
+    setIsShaking(true);
+    setTimeout(() => {
+      setIsShaking(false);
+      window.location.href = '/home/';
+    }, 500); // shake duration + small buffer
+  };
 
   return React.createElement(
     'div',
@@ -71,8 +82,8 @@ const MyFridgeApp = () => {
       React.createElement('img', {
         src: '/Home.png',
         alt: 'Home',
-        className: 'w-8 h-8 mr-2 cursor-pointer',
-        onClick: () => (window.location.href = '/home/'),
+        className: `w-8 h-8 mr-2 cursor-pointer home-icon${isShaking ? ' shaking' : ''}`,
+        onClick: handleHomeClick,
       }),
       React.createElement(
         'h1',
@@ -90,9 +101,10 @@ const MyFridgeApp = () => {
           height: `${containerHeight - headerHeight}px`,
           boxSizing: 'border-box',
         },
-      },console.log("hi", ingredients),
+      },
+      console.log("hi", ingredients),
       console.log(ingredients[2]),
-      ingredients.slice(2,ingredients.length).map((item, index) =>
+      ingredients.slice(2, ingredients.length).map((item, index) =>
         React.createElement(
           'div',
           {
@@ -130,7 +142,7 @@ const MyFridgeApp = () => {
       'button',
       {
         className:
-          'fixed w-14 h-14 bg-pink-300 border-2 border-black rounded-full flex items-center justify-center text-black font-bold text-3xl',
+          'fixed w-14 h-14 bg-blue-200 border-2 border-black rounded-full flex items-center justify-center text-black font-bold text-3xl',
         'aria-label': 'Add Item',
         style: {
           bottom: '32px',
@@ -143,6 +155,31 @@ const MyFridgeApp = () => {
     )
   );
 };
+
+// Inject animations CSS (can be moved to your myfridge.css if preferred)
+const style = document.createElement('style');
+style.innerHTML = `
+/* Grow on hover only when NOT shaking */
+.home-icon:not(.shaking):hover {
+  transform: scale(1.15);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Shake (tilt) animation */
+@keyframes tiltShake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.home-icon.shaking {
+  animation: tiltShake 0.4s ease;
+  pointer-events: none;
+}
+`;
+document.head.appendChild(style);
 
 // Render
 const rootElement = document.getElementById('root-myfridge');
